@@ -23,6 +23,14 @@
     "skill"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Darvan76/glua-gmod-skill.git"
+  },
+  "scripts": {
+    "check": "node scripts/check_skill.js",
+    "release": "npm version patch && git push && git push --tags && npm publish --access public"
+  },
   "engines": {
     "node": ">=18"
   }
