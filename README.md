@@ -1,88 +1,109 @@
-# glua-gmod-skill
+﻿# glua-gmod-skill
 
-A skill for **Claude Code** and other coding agents with a complete reference of the **GLua** (Garry's Mod Lua) API — generated from the [official GMod wiki](https://wiki.facepunch.com/gmod/) — plus battle-tested patterns for DarkRP addon development.
+Skill for coding agents with a bundled GLua / Garry's Mod API reference and practical addon-development patterns.
 
-Install it with one command and your agent will know exact function signatures, hook realms, argument types and return values without ever leaving the wiki open in a browser tab.
+The reference is generated from the public GMod wiki snapshot and organized for agent use: exact API names, realms, argument types, return values, source hints, hooks, classes, libraries, panels, enums, and structs.
 
 ## Install
+
+From npm, once published:
 
 ```bash
 npx glua-gmod-skill
 ```
 
-By default this installs the skill **globally** for every supported agent detected on your machine.
+From this checkout:
+
+```bash
+node bin/install.js
+```
+
+By default, the installer copies `skill/` into the supported global agent skill folders.
 
 ### Options
 
 ```bash
-# Install into the current project only, instead of globally
-npx glua-gmod-skill --project
+# Install into the current project instead of the user home
+node bin/install.js --project
 
-# Install for a specific agent (or a comma-separated list)
-npx glua-gmod-skill --agent=claude
-npx glua-gmod-skill --agent=codex,claude
+# Install for a specific agent, or a comma-separated list
+node bin/install.js --agent=codex
+node bin/install.js --agent=codex,claude
 
-# Overwrite an existing install
-npx glua-gmod-skill --force
+# Replace an existing install
+node bin/install.js --force
+node bin/install.js --force --agent=codex
 
 # List supported agents
-npx glua-gmod-skill --list
+node bin/install.js --list
 ```
 
-## Supported agents
+## Supported Agents
 
 | Agent | Install path |
 |---|---|
-| **Claude Code** | `~/.claude/skills/glua-gmod/` (global) or `.claude/skills/glua-gmod/` (project) |
-| **Cursor** | reads the same `~/.claude/skills/` folder automatically — no separate copy needed |
-| **Windsurf** | same as Cursor |
-| **OpenAI Codex CLI** | `~/.codex/skills/glua-gmod/` |
-| **OpenClaw** | `~/.openclaw/skills/glua-gmod/` |
-| **Any other agent following the `~/.agents/skills/` convention** | `~/.agents/skills/glua-gmod/` |
+| Claude Code | `~/.claude/skills/glua-gmod/` or `.claude/skills/glua-gmod/` |
+| Cursor | uses the Claude Code target |
+| Windsurf | uses the Claude Code target |
+| OpenAI Codex CLI | `~/.codex/skills/glua-gmod/` or `.codex/skills/glua-gmod/` |
+| OpenClaw | `~/.openclaw/skills/glua-gmod/` or `.openclaw/skills/glua-gmod/` |
+| Generic agents convention | `~/.agents/skills/glua-gmod/` or `.agents/skills/glua-gmod/` |
 
-If your agent isn't listed, the skill is just a folder with a `SKILL.md` file — copy `node_modules/glua-gmod-skill/skill/` into wherever your agent looks for skills/instructions and it should work.
+Restart the agent session after installing so the skill metadata is discovered.
 
-After installing, restart your agent session so it picks up the new skill.
+## Repository Layout
 
-## What's inside
-
-| File / folder | Contents |
+| Path | Contents |
 |---|---|
-| `00_INDEX.md` | Master lookup table: name → category → file → realms |
-| `globals.md` | Global functions (`Entity()`, `IsValid()`, `hook.Add`...) |
-| `classes/` | Methods per class (`Entity`, `Player`, `Vector`...) |
-| `libraries/` | Functions per library (`net`, `string`, `gui`...) |
-| `hooks/` | Hooks grouped by gamemode/system |
-| `panels/` | VGUI/Derma panels (`DFrame`, `DButton`, `DPanel`...) |
-| `enums.md` / `structs.md` | Constants and data structures |
-| `notes/` | Original patterns: DarkRP, CAMI/ULX/SAM integration, VFX, optimization |
+| `skill/SKILL.md` | Trigger metadata and concise operating instructions for agents |
+| `skill/agents/openai.yaml` | UI metadata for OpenAI Codex skill lists |
+| `skill/references/00_INDEX.md` | Master lookup table: name to category, file, and realms |
+| `skill/references/globals.md` | Global functions and values |
+| `skill/references/classes/` | Methods per class, such as `Entity`, `Player`, `Vector`, `Panel`, and `Weapon` |
+| `skill/references/libraries/` | Functions per library, such as `net`, `hook`, `timer`, `file`, `vgui`, `surface`, and `render` |
+| `skill/references/hooks/` | Hooks grouped by gamemode/system target |
+| `skill/references/panels/` | VGUI/Derma panels, such as `DFrame`, `DButton`, and `DPanel` |
+| `skill/references/enums.md` | Constants and enumerations |
+| `skill/references/structs.md` | API table structures |
+| `skill/references/patterns/` | Practical GLua, DarkRP, permissions, networking, Derma, and performance guidance |
+| `bin/install.js` | Dependency-free installer |
+| `scripts/check_skill.js` | Structural validation for the skill package |
 
-Every function entry includes realm (`client`/`server`/`menu`), typed arguments, return values, and a description.
+Every API entry includes realm (`client`, `server`, `menu`), typed arguments, return values, and a description where available.
 
-## How it was built
-
-1. **Scraping**: [`gmod-wiki-scraper`](https://www.npmjs.com/package/gmod-wiki-scraper) (MIT, by NullEnt1ty) against the wiki's own JSON endpoint (`wiki.facepunch.com/gmod/*?format=json`).
-2. **Conversion**: a custom script turns the scraped JSON into category-organized Markdown with a searchable index.
-3. **Manual enrichment**: DarkRP, admin-mod integration, and optimization patterns added by hand in `notes/`.
-
-## Updating
-
-The GMod wiki changes over time. To regenerate the content from scratch:
+## Validate
 
 ```bash
-npm install -g gmod-wiki-scraper
-gmod-wiki-scraper
-python3 build_glua_skill.py --input ./output --output ./skill
+npm run check
 ```
 
-## License and attribution
+This verifies the expected skill files exist and that `00_INDEX.md` links to files present under `skill/references/`.
 
-GMod wiki content belongs to Facepunch Studios and its community of editors. This package reorganizes it for personal/educational reference purposes for addon development; it is not an official Facepunch or Valve product. The installer code (`bin/install.js`, `package.json`) is released under the MIT license.
+## Updating The Snapshot
 
-## Disclaimer
+The GMod wiki changes over time. Regenerate the API markdown from a fresh wiki export, then place the generated files under `skill/references/`:
 
-This skill is not affiliated with Anthropic, Facepunch Studios, or Valve. "Garry's Mod" is a trademark of Facepunch Studios.
+```text
+skill/references/00_INDEX.md
+skill/references/globals.md
+skill/references/classes/
+skill/references/libraries/
+skill/references/hooks/
+skill/references/panels/
+skill/references/enums.md
+skill/references/structs.md
+```
 
-## Contributing
+After regenerating, run:
 
-Pull requests welcome — especially for `notes/` (addon patterns, performance gotchas, real-world examples). Run the regeneration script before submitting a PR so the index stays in sync.
+```bash
+npm run check
+```
+
+## Attribution
+
+GMod wiki content belongs to Facepunch Studios and its community of editors. This package reorganizes a wiki snapshot for personal and educational addon-development reference. It is not an official Facepunch or Valve product.
+
+## License
+
+Installer and package glue are MIT licensed. Respect the original terms and attribution requirements for any upstream wiki content.

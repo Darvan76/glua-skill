@@ -1,0 +1,3 @@
+display_name: GLua / GMod
+short_description: Garry's Mod Lua API reference and addon patterns.
+default_prompt: Use the GLua / GMod skill to inspect the relevant bundled API reference and apply Garry's Mod realm, networking, Derma, DarkRP, permissions, and performance patterns.

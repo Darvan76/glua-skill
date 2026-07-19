@@ -1,0 +1,29 @@
+{
+  "name": "glua-gmod-skill",
+  "version": "0.1.0",
+  "description": "GLua and Garry's Mod API reference skill for coding agents.",
+  "bin": {
+    "glua-gmod-skill": "bin/install.js"
+  },
+  "scripts": {
+    "check": "node scripts/check_skill.js"
+  },
+  "files": [
+    "bin/",
+    "scripts/",
+    "skill/",
+    "README.md"
+  ],
+  "keywords": [
+    "glua",
+    "garrysmod",
+    "gmod",
+    "codex",
+    "claude",
+    "skill"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
